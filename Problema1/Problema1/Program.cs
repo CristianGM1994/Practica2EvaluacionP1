@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 /*********************************  
  Autor: Cristian García Martín 
  Fecha creación:      01/02/2018  
- Última modificación: 02/02/2018   
- Versión: 1.01 
+ Última modificación: 03/02/2018   
+ Versión: 1.02 
 ***********************************/
 
 namespace Problema1
@@ -16,9 +16,12 @@ namespace Problema1
     class Program
     {
         static public List<Aula> lista_aulas = new List<Aula>();
+        static public List<Ordenador> lista_ordenadores = new List<Ordenador>();
         static Aula p;
+        static Ordenador o;
         static public int contadoraulas = 0;
         static int naulas = 5;
+        static int cuentaordenadores;
 
         static void Main(string[] args)
         {
@@ -47,7 +50,7 @@ namespace Problema1
                         break;
 
                     case "2":
-                        Console.Write("Menú2");
+                        MenuOrdenadores();
                         break;
 
                     case "3":
@@ -55,7 +58,7 @@ namespace Problema1
                         break;
 
                     case "4":
-                        Console.Write("Menú4");
+                        MenuListados();
                         break;
 
                     case "5":
@@ -67,6 +70,8 @@ namespace Problema1
                 }
             } while (opcion != "1" || opcion != "2" || opcion != "3" || opcion != "4" || opcion != "5" || opcion != "6");
         }
+
+
         static void MenuAulas()
         {
             string opcion;
@@ -233,5 +238,331 @@ namespace Problema1
         }
 
 
+        static void MenuOrdenadores()
+        {
+            string opcion;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("\t\t === ORDENADORES ===\n");
+                Console.WriteLine("\t1. Ver Lista Ordenadores.\n");
+                Console.WriteLine("\t2. Añadir Ordenador.\n");
+                Console.WriteLine("\t3. Borrar Ordenador.\n");
+                Console.WriteLine("\t4. Cambiar Ordenador de Aula.\n");
+                Console.WriteLine("\t5. Modificar Ordenador.\n");
+                Console.WriteLine("\t0. Volver al menú principal.\n");
+                Console.Write("\tElige Opción: ");
+                opcion = Console.ReadLine();
+                switch (opcion)
+                {
+                    case "1":
+                        VerDatosOrdenadores();
+                        break;
+
+                    case "2":
+                        AñadirOrdenador();
+                        break;
+
+                    case "3":
+                        BorrarDatosOrdenador();
+                        break;
+
+                    case "4":
+                        CambiarUbicacionOrdenador();
+                        break;
+
+                    case "5":
+                        ModificarOrdenadores();
+                        break;
+
+                    case "0":
+                        MenuGestionOrdenadores();
+                        break;
+                }
+            } while (opcion != "1" || opcion != "2" || opcion != "3" || opcion != "4" || opcion != "5" || opcion != "6");
+        }
+
+        static void AñadirOrdenador()
+        {
+            string opcion;
+
+            do
+            {
+                int id_aula;
+
+                string id, ram, discoduro, procesador, tvideo, aplicaciones; string fecha_cm = DateTime.Now.ToString();
+
+                Console.Clear();
+
+                Console.WriteLine("\t\t === AÑADIR ORDENADOR ===\n");
+
+                Console.Write("\tIdentificador ordenador (0 ver lista ordenadores): ");
+                id = Console.ReadLine();
+
+                Console.Write("\tId. Aula en la que se encuentra (0 ver lista): ");
+                id_aula = int.Parse(Console.ReadLine());
+
+                Console.WriteLine("\n\tIntroduzca las características del <{0}>", id);
+
+                Console.Write("\n\tRAM: ");
+                ram = Console.ReadLine();
+
+                Console.Write("\n\tDisco Duro: ");
+                discoduro = Console.ReadLine();
+
+                Console.Write("\n\tProcesador: ");
+                procesador = Console.ReadLine();
+
+                Console.Write("\n\tTarjeta Gráfica: ");
+                tvideo = Console.ReadLine();
+
+                Console.WriteLine("\n\tIntroduzca las aplicaciones (separadas por comas) del <{0}>", id);
+                Console.Write("\t");
+                aplicaciones = Console.ReadLine();
+
+                o = new Ordenador();
+                o.LeerDatos(id, id_aula, ram, discoduro, procesador, tvideo, aplicaciones, fecha_cm);
+                lista_ordenadores.Add(o);
+                Console.WriteLine("\n\t. . . . . Ordenador añadido correctamente.");
+
+                Console.Write("\n\t¿Más Ordenadores? (S/N): ");
+                opcion = Console.ReadLine();
+                //while (opcion != "S" || opcion != "s" || opcion != "N" || opcion != "n")
+                //{
+                //    Console.Write("\n\t\t**** ERROR – Introduzca Opción Valida\n");
+                //    Console.Write("\n\t¿Más Aulas? (S/N): ");
+                //    opcion = Console.ReadLine();
+                //    opcion.ToUpper();
+                //}
+            } while (opcion == "S" || opcion == "s");
+        }
+
+        static void VerDatosOrdenadores()
+        {
+            o.VerDatos();
+        }
+
+        static void BorrarDatosOrdenador()
+        {
+            string opcion, eleccionborrar;
+
+            do
+            {
+                string id;
+
+                Console.Clear();
+
+                Console.WriteLine("\t\t === BORRAR ORDENADORES ===\n");
+
+                Console.Write("\tIdentificador (0 ver lista de ordenadores):");
+                Console.Write("\n\t");
+                id = Console.ReadLine();
+
+                for (int i = 0; i < lista_ordenadores.Count; i++)
+                {
+                    string nombreordenador = lista_ordenadores[i].getId;
+                    string copianombreaula = nombreordenador;
+                    if (lista_ordenadores[i].getId == id)
+                    {
+                        Console.WriteLine("\n\tSe procedera a borrar el ordenador <{0}>\n\tSituado en el aula <{1}>", lista_ordenadores[i].getId, lista_aulas[i].getNombre);
+                        Console.Write("\n\t¿Desea continuar borrando el ordenador? (S/N): ");
+                        eleccionborrar = Console.ReadLine();
+
+                        if (eleccionborrar == "S" || eleccionborrar == "s")
+                        {
+                            lista_aulas.RemoveAt(i);
+                            Console.WriteLine("\n\t.......... Ordenador borrado correctamente");
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n\t......... No se ha borrado el aula.");
+                        }
+                    }
+                }
+
+                Console.Write("\n\t¿Borrar más? (S/N): ");
+                opcion = Console.ReadLine();
+            } while (opcion == "S" || opcion == "s");
+        }
+
+        static void CambiarUbicacionOrdenador()
+        {
+            string opcion;
+
+            do
+            {
+                string id; int nuevaubicacion;
+
+                Console.Clear();
+
+                Console.WriteLine("\t\t === CAMBIAR UBICACIÓN ORDENADORES ===\n");
+
+                Console.Write("\tIdentificador (0 ver lista de ordenadores):");
+                Console.Write("\n\t");
+                id = Console.ReadLine();
+
+                for (int i = 0; i < lista_ordenadores.Count; i++)
+                {
+                    string nombreordenador = lista_ordenadores[i].getId;
+                    string copianombreaula = nombreordenador;
+                    if (lista_ordenadores[i].getId == id)
+                    {
+                            Console.WriteLine("\n\tSeleccionado <{0}> situado en el aula <{1}>", lista_ordenadores[i].getId, lista_aulas[i].getNombre);
+                            Console.Write("\n\tSeleccione nueva ubicación (ID Aula): ");
+                            nuevaubicacion = int.Parse(Console.ReadLine());
+                            lista_ordenadores[i].getIda = nuevaubicacion;
+                            Console.WriteLine("\t. . . . . El ordenador “{0}” se ha movido correctamente", lista_ordenadores[i].getId, lista_aulas[i].getNombre);
+                    }
+                }
+
+                Console.Write("\n\t¿Mover más? (S/N): ");
+                opcion = Console.ReadLine();
+            } while (opcion == "S" || opcion == "s");
+        }
+
+        static void ModificarOrdenadores()
+        {
+            string opcion;
+
+            do
+            {
+                string id, opcionid, nuevaram, nuevodiscoduro, nuevoprocesador, nuevotvideo, nuevaaplicaciones;
+                string ramactual, discoduroactual, procesadoractual, graficaactual, aplicacionesactuales;
+                int nuevoidaula;
+
+                Console.Clear();
+
+                Console.WriteLine("\t\t === MODIFICAR ORDENADORES ===\n");
+
+                Console.Write("\tIdentificador Ordenador(0 ver lista de ordenadores): ");
+                id = Console.ReadLine();
+
+                for (int i = 0; i < lista_ordenadores.Count; i++)
+                {
+                    if (lista_ordenadores[i].getId == id)
+                    {
+                        ramactual = lista_ordenadores[i].getRam;
+                        discoduroactual = lista_ordenadores[i].getDiscoDuro;
+                        procesadoractual = lista_ordenadores[i].getProcesador;
+                        graficaactual = lista_ordenadores[i].getTvideo;
+                        aplicacionesactuales = lista_ordenadores[i].getAplicaciones;
+                        Console.Write("\n\t¿Desea Modificar su Identificador? (S/N): ");
+                        opcionid = Console.ReadLine();
+                        if (opcionid == "S" || opcionid == "s")
+                        {
+                            Console.Write("\n\tNuevo Identificador: ");
+                            nuevoidaula = int.Parse(Console.ReadLine());
+                            lista_ordenadores[i].getIda = nuevoidaula;
+                            Console.WriteLine("\n\t¡ID MODIFICADO!");
+                        }
+
+
+                        Console.WriteLine("\n\tEl ordenador se encuentra en el aula con ID <{0}>", lista_ordenadores[i].getIda);
+
+                        Console.WriteLine("\n\tModifique las caracteristicas del <{0}> (en blanco se mantienen)", lista_ordenadores[i].getId);
+
+                        Console.Write("\n\tRAM <{0}>: ", lista_ordenadores[i].getRam);
+                        nuevaram = Console.ReadLine();
+                        if (nuevaram == "")
+                        {
+                            lista_ordenadores[i].getRam = ramactual;
+                        }
+                        else
+                        {
+                            lista_ordenadores[i].getRam = nuevaram;
+                        }
+                        
+
+                        Console.Write("\n\tDisco Duro <{0}>: ", lista_ordenadores[i].getDiscoDuro);
+                        nuevodiscoduro = Console.ReadLine();
+                        if (nuevodiscoduro == "")
+                        {
+                            lista_ordenadores[i].getDiscoDuro = discoduroactual;
+                        }
+                        else
+                        {
+                            lista_ordenadores[i].getDiscoDuro = nuevodiscoduro;
+                        }
+
+                        Console.Write("\n\tProcesador <{0}>: ", lista_ordenadores[i].getProcesador);
+                        nuevoprocesador = Console.ReadLine();
+                        if (nuevoprocesador == "")
+                        {
+                            lista_ordenadores[i].getProcesador = procesadoractual;
+                        }
+                        else
+                        {
+                            lista_ordenadores[i].getProcesador = nuevoprocesador;
+                        }
+
+                        Console.Write("\n\tTarjeta Gráfica <{0}>: ", lista_ordenadores[i].getTvideo);
+                        nuevotvideo = Console.ReadLine();
+                        if (nuevotvideo == "")
+                        {
+                            lista_ordenadores[i].getTvideo = graficaactual;
+                        }
+                        else
+                        {
+                            lista_ordenadores[i].getTvideo = nuevotvideo;
+                        }
+
+                        Console.Write("\n\tModifique las aplicaciones (separadas por comas) del <{0}> (en blanco se mantienen) <{1}>: ", lista_ordenadores[i].getId, lista_ordenadores[i].getAplicaciones);
+                        nuevaaplicaciones = Console.ReadLine();
+                        if (nuevaaplicaciones == "")
+                        {
+                            lista_ordenadores[i].getAplicaciones = aplicacionesactuales;
+                        }
+                        else
+                        {
+                            lista_ordenadores[i].getAplicaciones = nuevaaplicaciones;
+                        }
+                    }
+                }
+                Console.Write("\n\t¿Más ordenadores (S/N)?: ");
+                opcion = Console.ReadLine();
+            } while (opcion == "S" || opcion == "s");
+        }
+
+
+        static void MenuListados()
+        {
+            string opcion;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("\t\t === LISTADOS ===\n");
+                Console.WriteLine("\t1. Nº de ordenadores por aula.\n");
+                Console.WriteLine("\t2. Lista de Ordenadores ordenados por aula e identificador.\n");
+                Console.WriteLine("\t3. Aplicaciones instaladas por cada ordenador.\n");
+                Console.WriteLine("\t4. Características de cada ordenador.\n");
+                Console.WriteLine("\t0. Volver al Menú Principal.\n");
+                Console.Write("\tElige Opción: ");
+                opcion = Console.ReadLine();
+                switch (opcion)
+                {
+                    case "1":
+                        ListadoAulasOrdenadas();
+                        break;
+
+                    case "2":
+                        break;
+
+                    case "3":
+                        break;
+
+                    case "4":
+                        break;
+
+                    case "0":
+                        MenuGestionOrdenadores();
+                        break;
+                }
+            } while (opcion != "1" || opcion != "2" || opcion != "3" || opcion != "4" || opcion != "5" || opcion != "6");
+        }
+
+        static void ListadoAulasOrdenadas()
+        {
+            o.VerDatosListas();
+        }
     }
 }
