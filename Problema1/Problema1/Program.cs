@@ -545,13 +545,17 @@ namespace Problema1
                         break;
 
                     case "2":
+                        DatosyAPP();
                         break;
 
                     case "3":
+                        AplicacionesInstaladas();
                         break;
 
                     case "4":
+                        CaracteristicasPC();
                         break;
+                        
 
                     case "0":
                         MenuGestionOrdenadores();
@@ -563,6 +567,21 @@ namespace Problema1
         static void ListadoAulasOrdenadas()
         {
             o.VerDatosListas();
+        }
+
+        static void DatosyAPP()
+        {
+            o.VerDatosOrdenadosYAPP();
+        }
+
+        static void AplicacionesInstaladas()
+        {
+            o.AplicacionesInstaladasOtroOrden();
+        }
+
+        static void CaracteristicasPC()
+        {
+            o.CaracteristicasOrdenador();
         }
     }
 }

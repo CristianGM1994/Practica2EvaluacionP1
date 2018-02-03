@@ -148,27 +148,120 @@ namespace Problema1
         public void VerDatosListas()
         {
             Console.Clear();
-                int npcs = 0;
-                Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Aula => Aula.ida).ToArray();
-                Console.WriteLine("\t\t=== LISTADO DE ORDENADORES ===\n");
-                Console.WriteLine("\tId.\tNombre\t\tNº Ordenadores\n");
-                Console.WriteLine("\t== \t====== \t\t==================");
+            int npcs = 0;
+            Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Aula => Aula.ida).ToArray();
+            Console.WriteLine("\t\t=== LISTADO DE ORDENADORES ===\n");
+            Console.WriteLine("\tId.\tNombre\t\tNº Ordenadores\n");
+            Console.WriteLine("\t== \t====== \t\t==================");
+            for (int i = 0; i < Program.lista_ordenadores.Count; i++)
+            {
+                if (Program.lista_ordenadores[i].getIda == Program.lista_aulas[i].getId)
+                {
+                    npcs++;
+                }
+                Console.Write("\n\t{0}\t{1}\t\t{2}\n", Program.lista_aulas[i].getId, Program.lista_aulas[i].getNombre, npcs);
+            }
+
+            Console.ReadLine();
+        } //NO FUNCIONA
+
+        public void VerDatosOrdenadosYAPP()
+        {
+            Console.Clear();
+            string caracteres;
+            Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.ida).ToArray();
+            int nordenadores = 0;
+            nordenadores = Program.lista_ordenadores.Count;
+            Console.WriteLine("\t\t=== LISTADO DE ORDENADORES ORDENADOS POR AULA E IDENT. ===\n");
+            Console.WriteLine("\tId.\tAula\t\tAplicaciones\n");
+            Console.WriteLine("\t== \t====== \t\t==================");
+            foreach (var a in Program.lista_aulas)
+            {
                 foreach (var c in sorted)
                 {
-                    foreach (var a in Program.lista_aulas)
+                    if (a.getId == c.ida)
                     {
-                        if (a.getId == c.ida)
+                        if (c.aplicaciones.Length > 30)
                         {
-                            npcs++;
+                            caracteres = c.aplicaciones.Substring(0, 30);
+                            Console.Write("\n\t{0}\t{1}\t\t{2}\n", c.id, a.getNombre, caracteres);
                         }
-                        Console.Write("\n\t{0}\t{1}\t\t\t{2}\n", c.ida, a.getNombre, npcs);
+                        else if (c.aplicaciones.Length < 30)
+                        {
+                            Console.Write("\n\t{0}\t{1}\t\t{2}\n", c.id, a.getNombre, c.aplicaciones);
+                        }
                     }
                 }
-                Console.ReadLine();
+            }
+            Console.WriteLine("\n\t==========================================");
+            Console.WriteLine("\n\tNº Ordenadores: {0}", nordenadores);
+            Console.ReadLine();
+            }
+
+        public void AplicacionesInstaladasOtroOrden()
+        {
+            
+            Console.Clear();
+            Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.id).ToArray();
+            int nordenadores = 0;
+            nordenadores = Program.lista_ordenadores.Count;
+            Console.WriteLine("\t\t=== APLICACIONES INSTALADAS POR ORDENADO ===\n");
+            Console.WriteLine("\tId.\tAplicaciones\n");
+            Console.WriteLine("\t== \t=========================================");
+            foreach (var a in Program.lista_aulas)
+            {
+                foreach (var c in sorted)
+                {
+                    int tamañogetnombreyhuecos = 8+ c.id.Length;
+                    int tamañototal = tamañogetnombreyhuecos + c.aplicaciones.Length;
+                    int diferencia = tamañototal - Console.WindowWidth;
+                    int diferenciastring = c.aplicaciones.Length - diferencia;
+                    string aplicaciones1 = c.aplicaciones.Substring(0, Console.WindowWidth - diferencia);
+                    //string aplicaciones2 = c.aplicaciones.Substring(Console.WindowWidth - diferencia, Console.WindowWidth - diferencia);
+                    if (a.getId == c.ida)
+                    {
+                        if (tamañototal > Console.WindowWidth)
+                        {
+                            //Console.WriteLine("{0} aplicaciones total", aplicaciones.Length);
+                            //Console.WriteLine("{0} tamañototal", tamañototal);
+                            //Console.WriteLine("{0} diferencia", diferencia);
+                            //Console.WriteLine("{0} diferenciastring", diferenciastring);
+                            Console.WriteLine("{0} Tamaño Primera Cadena", aplicaciones1.Length);
+                            Console.Write("\n\t{0}\t{1}\n\t\t", c.id, aplicaciones1);
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("\n\t==========================================");
+            Console.WriteLine("\n\tNº Ordenadores: {0}", nordenadores);
+            Console.ReadLine();
+        } //BOCETO
+
+        public void CaracteristicasOrdenador()
+        {
+            Console.Clear();
+            Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.ida).ToArray();
+            int nordenadores = 0;
+            nordenadores = Program.lista_ordenadores.Count;
+            Console.WriteLine("\t\t=== Caracteristicas de Ordenador ===\n");
+            Console.WriteLine("\tId.\t\tRAM \t\tDisco D. \tT.Grác. \tProces. \tAltaMod.\n");
+            Console.WriteLine("\t== \t\t====== \t\t======== \t======== \t====== \t\t======");
+            foreach (var a in Program.lista_aulas)
+            {
+                foreach (var c in sorted)
+                {
+                    if (a.getId == c.ida)
+                    {
+                        string fechabuena = c.fecha.Substring(0, 10);
+                        Console.Write("\n\t{0}\t\t{1}\t\t{2}\t{3}\t{4}\t{5}\n", c.id, c.getRam, c.getDiscoDuro, c.getTvideo, c.getProcesador, fechabuena);
+                    }
+                }
+            }
+            Console.WriteLine("\n\t==========================================");
+            Console.WriteLine("\n\tNº Ordenadores: {0}", nordenadores);
+            Console.ReadLine();
         }
-
     }
-
 }
     
 
