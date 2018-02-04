@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 /*********************************  
  Autor: Cristian García Martín 
  Fecha creación:      01/02/2018  
- Última modificación: 03/02/2018   
- Versión: 1.02 
+ Última modificación: 04/02/2018   
+ Versión: 1.03
 ***********************************/
 
 namespace Problema1
@@ -17,11 +17,12 @@ namespace Problema1
     {
         static public List<Aula> lista_aulas = new List<Aula>();
         static public List<Ordenador> lista_ordenadores = new List<Ordenador>();
+
         static Aula p;
         static Ordenador o;
+
         static public int contadoraulas = 0;
-        static int naulas = 5;
-        static int cuentaordenadores;
+        static int naulaspermitidas = 5;
 
         static void Main(string[] args)
         {
@@ -54,7 +55,7 @@ namespace Problema1
                         break;
 
                     case "3":
-                        Console.Write("Menú3");
+                        MenuBusquedas();
                         break;
 
                     case "4":
@@ -62,7 +63,7 @@ namespace Problema1
                         break;
 
                     case "5":
-                        Console.Write("Menú5");
+                        MenuConfiguracion();
                         break;
 
                     case "0":
@@ -123,6 +124,14 @@ namespace Problema1
 
                 Console.Clear();
 
+                if (lista_aulas.Count == naulaspermitidas)
+                {
+                    Console.Clear();
+
+                    Console.WriteLine("\n\tLIMITE DE AULAS SUPERADO. NO SE HA PODIDO REGISTRAR.");
+                }
+                else
+                { 
                 Console.WriteLine("\t\t === AÑADIR AULAS ===\n");
 
                 Console.Write("\tIdentificador: ");
@@ -131,20 +140,12 @@ namespace Problema1
                 Console.Write("\n\tNombre de Aula: ");
                 nombre_aula = Console.ReadLine();
 
-                if (contadoraulas == naulas)
-                {
-                    Console.WriteLine("\n\tLIMITE DE AULAS SUPERADO. NO SE HA PODIDO REGISTRAR.");
-                }
+                p = new Aula();
+                p.LeerDatos(id_aula, nombre_aula, fecha_cm);
+                lista_aulas.Add(p);
 
-                else
-                {
-                    p = new Aula();
-                    p.LeerDatos(id_aula, nombre_aula, fecha_cm);
-                    lista_aulas.Add(p);
-                    Console.WriteLine("\n\t¡REGISTRO COMPLETADO CON EXITO!");
+                Console.WriteLine("\n\t¡REGISTRO COMPLETADO CON EXITO!");
                 }
- 
-                contadoraulas++;
 
                 Console.Write("\n\t¿Más Aulas? (S/N): ");
                 opcion = Console.ReadLine();
@@ -524,6 +525,44 @@ namespace Problema1
         }
 
 
+        static void MenuBusquedas()
+        {
+            string opcion;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("\t\t === BUSQUEDAS ===\n");
+                Console.WriteLine("\t1. Buscar Ordenador Por Procesador 1.\n");
+                Console.WriteLine("\t2. PROGRAMA 2.\n");
+                Console.WriteLine("\t3. PROGRAMA 3.\n");
+                Console.WriteLine("\t0. Volver al menú principal.\n");
+                Console.Write("\tElige Opción: ");
+                opcion = Console.ReadLine();
+                switch (opcion)
+                {
+                    case "1":
+                        o.BuscarPorProcesador();
+                        break;
+
+                    case "2":
+                        break;
+
+                    case "3":
+                        break;
+
+                    case "0":
+                        MenuGestionOrdenadores();
+                        break;
+                }
+            } while (opcion != "1" || opcion != "2" || opcion != "3");
+        }
+
+        static void BuscarPorProcesador()
+        {
+            o.BuscarPorProcesador();
+        }
+
+
         static void MenuListados()
         {
             string opcion;
@@ -582,6 +621,121 @@ namespace Problema1
         static void CaracteristicasPC()
         {
             o.CaracteristicasOrdenador();
+        }
+
+
+        static void MenuConfiguracion()
+        {
+            string opcion;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("\t\t === CONFIGURACIÓN ===\n");
+                Console.WriteLine("\t1. Número máximo de aulas.\n");
+                Console.WriteLine("\t2. Número máximo de ordenadores por aula\n");
+                Console.WriteLine("\t9. Inicialización automatica de pruebas\n");
+                Console.WriteLine("\t0. Salir\n");
+                Console.Write("\tElige Opción: ");
+                opcion = Console.ReadLine();
+                switch (opcion)
+                {
+                    case "1":
+                        CambiarNAulas();
+                        break;
+
+                    case "2":
+                        break;
+
+                    case "9":
+                        InicializacionPruebas();
+                        break;
+
+                    case "0":
+                        MenuGestionOrdenadores();
+                        break;
+                }
+            } while (opcion != "1" || opcion != "2" || opcion != "3" || opcion != "4");
+        }
+
+        static void CambiarNAulas()
+        {
+            int nuevonumeroaulas;
+
+            Console.Clear();
+            Console.WriteLine("\t\t === CAMBIAR NÚMERO MAXIMO DE AULAS ===\n");
+            Console.WriteLine("\tN· Actual de Aulas permitidas: {0}", naulaspermitidas);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("\n\t[ATENCION]: El nuevo número de aulas permitidas no puede ser menor al anterior.\n");
+            Console.ResetColor();
+
+            Console.Write("\n\tCambiar N· De Aulas a: ");
+            nuevonumeroaulas = int.Parse(Console.ReadLine());
+
+            while (nuevonumeroaulas < naulaspermitidas)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("\n\t✾ Atención: El nuevo número de aulas no puede ser menor al anterior.");
+                Console.ResetColor();
+
+                Console.Write("\n\tCambiar N· De Aulas a: ");
+                nuevonumeroaulas = int.Parse(Console.ReadLine());
+            }
+
+            naulaspermitidas = nuevonumeroaulas; 
+        }
+
+        static void InicializacionPruebas()
+        { 
+            Console.Clear();
+
+            string fecha_cm = DateTime.Now.ToString();
+
+            for (int i = 1; i <= 5; i++)
+            {
+                p = new Aula();
+                p.LeerDatos(i, "Aula " + i, fecha_cm);
+                lista_aulas.Add(p);
+            }
+
+            for (int a = 1; a <= 4; a++)
+            {
+                o = new Ordenador();
+                o.LeerDatos("PC0" + a, a, "8,00 GB", "560,00 GB", "Intel i5", "Nvidia Force", "Win 7, Office 2010, Chrome", fecha_cm);
+
+                if (a == 3 || a == 4)
+                {
+                    o.LeerDatos("PC0" + a, a+1, "8,00 GB", "560,00 GB", "Intel i5", "Nvidia Force", "Win 7, Office 2010, Chrome", fecha_cm);
+                }
+
+                lista_ordenadores.Add(o);
+            }
+
+            for (int b = 5; b <= 8; b++)
+            {
+                o = new Ordenador();
+                o.LeerDatos("PC0" + b, b - 2, "4,00 GB", "860,00 GB", "Intel Celeron", "Nvidia Force", "Ubuntu 14, Gedit, LibreOffice 5", fecha_cm);
+
+                if (b == 6)
+                {
+                    o.LeerDatos("PC0" + b, b - 3, "4,00 GB", "860,00 GB", "Intel Celeron", "Nvidia Force", "Ubuntu 14, Gedit, LibreOffice 5", fecha_cm);
+                }
+
+                if (b == 7)
+                {
+                    o.LeerDatos("PC0" + b, b - 4, "4,00 GB", "860,00 GB", "Intel Celeron", "Nvidia Force", "Ubuntu 14, Gedit, LibreOffice 5", fecha_cm);
+                }
+
+                if (b == 8)
+                {
+                    o.LeerDatos("PC0" + b, b - 5, "4,00 GB", "860,00 GB", "Intel Celeron", "Nvidia Force", "Ubuntu 14, Gedit, LibreOffice 5", fecha_cm);
+                }
+
+                lista_ordenadores.Add(o);
+            }
+
+            Console.WriteLine("\n\n\t\t MODO INICIALIZACIÓN PARA PRUEBAS ACTIVADO \n");
+            Console.WriteLine("\t\t PULSE INTRO PARA VOLVER ATRÁS \n");
+            Console.ReadLine();
         }
     }
 }

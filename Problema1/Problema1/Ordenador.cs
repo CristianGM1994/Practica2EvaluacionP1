@@ -27,9 +27,9 @@ namespace Problema1
         public void VerDatos()
         {
             Console.Clear();
-            if (Program.lista_ordenadores.Capacity < 1)
+            if (Program.lista_ordenadores.Count == 0)
             {
-                Console.WriteLine("\n\n\t\t\t ¡NO HAY AULAS REGISTRADAS! ");
+                Console.WriteLine("\n\n\t\t\t ¡NO HAY ORDENADORES REGISTRADOS! ");
                 Console.WriteLine("\n\n\t\t\t PULSA INTRO PARA VOLVER ATRÁS ");
                 Console.ReadLine();
             }
@@ -240,7 +240,7 @@ namespace Problema1
         public void CaracteristicasOrdenador()
         {
             Console.Clear();
-            Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.ida).ToArray();
+            Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.id).ToArray();
             int nordenadores = 0;
             nordenadores = Program.lista_ordenadores.Count;
             Console.WriteLine("\t\t=== Caracteristicas de Ordenador ===\n");
@@ -254,6 +254,33 @@ namespace Problema1
                     {
                         string fechabuena = c.fecha.Substring(0, 10);
                         Console.Write("\n\t{0}\t\t{1}\t\t{2}\t{3}\t{4}\t{5}\n", c.id, c.getRam, c.getDiscoDuro, c.getTvideo, c.getProcesador, fechabuena);
+                    }
+                }
+            }
+            Console.WriteLine("\n\t==========================================");
+            Console.WriteLine("\n\tNº Ordenadores: {0}", nordenadores);
+            Console.ReadLine();
+        }
+
+        public void BuscarPorProcesador()
+        {
+            Console.Clear();
+            string procesadorbusqueda;
+            int nordenadores = 0;
+            Console.WriteLine("\n\t\t=== Busqueda de Ordenador por Procesador ===\n");
+            Console.Write("\tIntroduce el nombre exacto del procesador buscado: ");
+            procesadorbusqueda = Console.ReadLine();
+
+            Console.WriteLine("\n\tId.\t\tAula \t\tProcesador");
+            Console.WriteLine("\n\t== \t\t====== \t\t========");
+            foreach (var c in Program.lista_ordenadores)
+            {
+                foreach (var a in Program.lista_aulas)
+                 {
+                    if (a.getId == c.ida && c.getProcesador.ToLower() == procesadorbusqueda.ToLower())
+                    {
+                        Console.Write("\n\t{0}\t\t{1}\t\t{2}\n", c.id, a.getNombre, c.getProcesador);
+                        nordenadores++;
                     }
                 }
             }
