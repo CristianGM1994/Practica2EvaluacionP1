@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 /*********************************  
  Autor: Cristian García Martín 
  Fecha creación:      01/02/2018  
- Última modificación: 09/02/2018   
- Versión: 1.04
+ Última modificación: 04/02/2018   
+ Versión: 1.03
 ***********************************/
 
 namespace Problema1
