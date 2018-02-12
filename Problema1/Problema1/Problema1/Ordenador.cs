@@ -247,7 +247,7 @@ namespace Problema1
                 Console.WriteLine("\n\t== \t\t====== \t\t========");
                 foreach (var c in sorted)
                 {
-                    if (c.procesador.ToLower() == procesadorbusqueda.ToLower())
+                    if (c.procesador.ToLower().Contains(procesadorbusqueda.ToLower()))
                     {
                         npcs++;
                         Console.Write("\n\t{0}\t\t{1}\t\t{2}\n", c.id, c.NombreAula, c.procesador);
@@ -323,7 +323,7 @@ namespace Problema1
                 Console.WriteLine("\n\t== \t\t====== \t\t========");
                 foreach (var c in sorted)
                 {
-                    if (c.tvideo.ToLower() == tvideobuscada.ToLower())
+                    if (c.tvideo.ToLower().Contains(tvideobuscada.ToLower()))
                     {
                         npcs++;
                         Console.Write("\n\t{0}\t\t{1}\t\t{2}\n", c.id, c.NombreAula, c.tvideo);

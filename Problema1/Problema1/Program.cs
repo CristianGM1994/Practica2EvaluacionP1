@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 /*********************************  
  Autor: Cristian García Martín 
  Fecha creación:      01/02/2018  
- Última modificación: 09/02/2018   
+ Última modificación: 12/02/2018   
  Versión: 1.04
 ***********************************/
 
@@ -17,12 +17,14 @@ namespace Problema1
     {
         static public List<Aula> lista_aulas = new List<Aula>();
         static public List<Ordenador> lista_ordenadores = new List<Ordenador>();
+        static public List<Ordenador> lista_reserva = new List<Ordenador>();
 
         static Aula p;
-        static Ordenador o;
+        static public Ordenador o;
 
         static public int contadoraulas = 0;
         static int naulaspermitidas = 5;
+        static int nordenadorespermitidosaula = 5;
 
         static void Main(string[] args)
         {
@@ -168,12 +170,41 @@ namespace Problema1
                 Console.Write("\n\t¿Más Aulas? (S/N): ");
                 opcion = Console.ReadLine();
                 opcion.ToLower();
+
+                while (opcion != "s" && opcion != "n")
+                {
+                    Console.WriteLine("\n\t** ERROR **");
+                    Console.Write("\n\t¿Más Aulas? (S/N): ");
+                    opcion = Console.ReadLine();
+                    opcion.ToLower();
+                }
             } while (opcion == "s");
         }
 
         static void VerDatosAulas()
         {
-            p.VerDatos();
+            Console.Clear();
+            if (Program.lista_aulas.Count() == 0)
+            {
+                Console.WriteLine("\n\n\t\t\t ¡NO HAY AULAS REGISTRADAS! ");
+                Console.WriteLine("\n\n\t\t\t PULSA INTRO PARA VOLVER ATRÁS ");
+                Console.ReadLine();
+            }
+            else
+            {
+                Aula[] sorted = Program.lista_aulas.OrderBy(Aula => Aula.id).ToArray();
+                Console.WriteLine("\t\t=== LISTADO DE AULAS ===\n");
+                Console.WriteLine("\tId.\tNombre\tN· Ordenadores\tFecha y hora modificación\n");
+                Console.WriteLine("\t== \t====== \t============== \t==========================");
+                foreach (var c in sorted)
+                {
+                    Console.Write("\n\t{0}\t{1}\t\t{2}\t{3}\n", c.id, c.nombre, c.lista_ordenadores.Count, c.fecha);
+                }
+                Console.WriteLine("\n\t==========================================================");
+                Console.WriteLine("\n\tN· Aulas: {0}", lista_aulas.Count);
+                Console.WriteLine("\n\tN· Ordenadores: {0}", lista_ordenadores.Count);
+                Console.ReadLine();
+            }
         }
 
         static void BorrarDatosAula()
@@ -215,12 +246,38 @@ namespace Problema1
                     string copianombreaula = nombreaula;
                     if (lista_aulas[i].getId == id_aula)
                     {
+
                         Console.WriteLine("\n\tSe procedera a borrar el: {0}", lista_aulas[i].getNombre);
+                        Console.WriteLine("\n\tEl aula {0} tiene <{1}> ordenadores que también serán borrados.", lista_aulas[i].getNombre, lista_aulas[i].getLista.Count);
                         Console.Write("\n\t¿Desea continuar borrando el aula? (S/N): ");
                         eleccionborrar = Console.ReadLine();
+                        eleccionborrar.ToLower();
 
-                        if (eleccionborrar == "S" || eleccionborrar == "s")
+                        while (eleccionborrar != "s" && eleccionborrar != "n")
                         {
+                            Console.WriteLine("\n\t**ERROR**");
+                            Console.Write("\n\t¿Desea continuar borrando el aula? (S/N): ");
+                            eleccionborrar = Console.ReadLine();
+                            eleccionborrar.ToLower();
+                        }
+
+                        if (eleccionborrar == "s")
+                        {
+                            for (int a = 0; a < lista_ordenadores.Count; a++)
+                            {
+                                if (lista_ordenadores[a].Aula != lista_aulas[i])
+                                {
+                                    lista_reserva.Add(lista_ordenadores[a]);
+                                }
+                            }
+                            lista_ordenadores.Clear();
+
+                            for (int c = 0; c < lista_reserva.Count; c++)
+                            {
+                                lista_ordenadores.Add(lista_reserva[c]);
+                            }
+
+                            lista_reserva.Clear();
                             lista_aulas.RemoveAt(i);
                             Console.WriteLine("\n\t.......... {0} borrada.", copianombreaula);
                         }
@@ -233,7 +290,14 @@ namespace Problema1
 
                 Console.Write("\n\t¿Borrar más? (S/N): ");
                 opcion = Console.ReadLine();
-            } while (opcion == "S" || opcion == "s");
+                opcion.ToLower();
+                while (opcion != "s" && opcion != "n")
+                {
+                    Console.Write("\n\t¿Borrar más? (S/N): ");
+                    opcion = Console.ReadLine();
+                    opcion.ToLower();
+                }
+            } while (opcion == "s");
         }
 
         static void ModificarDatosAula()
@@ -283,7 +347,14 @@ namespace Problema1
 
                 Console.Write("\n\t¿Modificar más aulas? (S/N): ");
                 opcion = Console.ReadLine();
-            } while (opcion == "S" || opcion == "s");
+                opcion.ToLower();
+                while (opcion != "s" && opcion != "n")
+                {
+                    Console.Write("\n\t¿Modificar más aulas? (S/N): ");
+                    opcion = Console.ReadLine();
+                    opcion.ToLower();
+                }
+            } while (opcion == "s");
         }
 
 
@@ -375,6 +446,7 @@ namespace Problema1
                     VerDatosAulas();
                     return;
                 }
+
                 while (id_aula < 1 || !lista_aulas.Contains(obteneraula(id_aula)))
                 {
                     Console.WriteLine("\n\t** ERROR DE IDENTIFICADOR **");
@@ -385,6 +457,21 @@ namespace Problema1
                     {
                         VerDatosAulas();
                         return;
+                    }
+                }
+
+                for (int i = 0; i < lista_aulas.Count; i++)
+                {
+                    if (lista_aulas[i].getId == id_aula)
+                    {
+                        if (lista_aulas[i].getLista.Count == nordenadorespermitidosaula)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("\n\t\t ¡ESTE AULA TIENE EL MÁXIMO DE ORDENADORES PERMITIDOS! {0}", lista_aulas[i].getLista.Count);
+                            Console.WriteLine("\n\t\t ¡PULSA INTRO PARA VOLVER ATRÁS!");
+                            Console.ReadLine();
+                            return;
+                        }
                     }
                 }
 
@@ -417,12 +504,39 @@ namespace Problema1
 
                 Console.Write("\n\t¿Más Ordenadores? (S/N): ");
                 opcion = Console.ReadLine();
-            } while (opcion == "S" || opcion == "s");
+                opcion.ToLower();
+                while (opcion != "s" && opcion != "n")
+                {
+                    Console.Write("\n\t¿Más Ordenadores? (S/N): ");
+                    opcion = Console.ReadLine();
+                    opcion.ToLower();
+                }
+            } while (opcion == "s");
         }
 
         static void VerDatosOrdenadores()
         {
-            o.VerDatos();
+            Console.Clear();
+            if (Program.lista_ordenadores.Count == 0 || Program.lista_aulas.Count == 0)
+            {
+                Console.WriteLine("\n\n\t\t\t ¡NO HAY ORDENADORES O AULAS REGISTRADAS! ");
+                Console.WriteLine("\n\n\t\t\t PULSA INTRO PARA VOLVER ATRÁS ");
+                Console.ReadLine();
+            }
+            else
+            {
+                Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.id).ToArray();
+                Console.WriteLine("\t\t=== LISTADO DE ORDENADORES ===\n");
+                Console.WriteLine("\tId.\tNombre\t\tFecha Modificacion\n");
+                Console.WriteLine("\t== \t====== \t\t==================");
+                foreach (var c in sorted)
+                {
+                    Console.Write("\n\t{0}\t{1}\t\t{2}\n", c.id, c.NombreAula, c.fecha);
+                }
+                Console.WriteLine("\n\t============================================");
+                Console.WriteLine("\n\tN· Ordenadores: {0}", lista_ordenadores.Count);
+                Console.ReadLine();
+            }
         }
 
         static void BorrarDatosOrdenador()
@@ -468,8 +582,15 @@ namespace Problema1
                         Console.WriteLine("\n\tSe procedera a borrar el ordenador <{0}>\n\tSituado en el aula <{1}>", lista_ordenadores[i].getId, lista_aulas[i].getNombre);
                         Console.Write("\n\t¿Desea continuar borrando el ordenador? (S/N): ");
                         eleccionborrar = Console.ReadLine();
+                        eleccionborrar.ToLower();
+                        while (eleccionborrar != "s" && eleccionborrar != "n")
+                        {
+                            Console.Write("\n\t¿Desea continuar borrando el ordenador? (S/N): ");
+                            eleccionborrar = Console.ReadLine();
+                            eleccionborrar.ToLower();
+                        }
 
-                        if (eleccionborrar == "S" || eleccionborrar == "s")
+                        if (eleccionborrar == "s")
                         {
                             lista_ordenadores.RemoveAt(i);
                             ordenadorborrar.Aula.getLista.Remove(ordenadorborrar);
@@ -478,13 +599,20 @@ namespace Problema1
                         }
                         else
                         {
-                            Console.WriteLine("\n\t......... No se ha borrado el aula.");
+                            Console.WriteLine("\n\t......... No se ha borrado el ordenador.");
                         }
                     }
                 }
 
                 Console.Write("\n\t¿Borrar más? (S/N): ");
                 opcion = Console.ReadLine();
+                opcion.ToLower();
+                while (opcion != "s" && opcion != "n")
+                {
+                    Console.Write("\n\t¿Borrar más? (S/N): ");
+                    opcion = Console.ReadLine();
+                    opcion.ToLower();
+                }
             } while (opcion == "S" || opcion == "s");
         }
 
@@ -523,14 +651,31 @@ namespace Problema1
                 }
 
                 o = obtenerordenador(id);
-                Console.Write("Nueva Ubicación: ");
+                Console.Write("\n\tSeleccione nueva ubicación: ");
                 nuevaubicacion = int.Parse(Console.ReadLine());
-                p = obteneraula(nuevaubicacion);
+                if (nuevaubicacion == 0)
+                {
+                    VerDatosAulas();
+                }
 
+                while (!lista_aulas.Contains(obteneraula(nuevaubicacion)))
+                {
+                    Console.WriteLine("\n\t** ERROR DE IDENTIFICADOR DE AULA**");
+                    Console.WriteLine("\n\tSe puede producir por:\n\t1· El identificador de ese Aula no existe.");
+                    Console.Write("\n\tSeleccione nueva ubicación: ");
+                    nuevaubicacion = int.Parse(Console.ReadLine());
+                    if (nuevaubicacion == 0)
+                    {
+                        VerDatosAulas();
+                    }
+                }
+
+                p = obteneraula(nuevaubicacion);
                 o.Aula.getLista.Remove(o);
                 o.Aula = p;
                 p.getLista.Add(o);
-      
+
+                Console.WriteLine("\n\t. . . . . El ordenador “{0}” se ha movido correctamente al <{1}>", o.getId, p.getNombre);
         
                 Console.Write("\n\t¿Mover más? (S/N): ");
                 opcion = Console.ReadLine();
@@ -582,7 +727,14 @@ namespace Problema1
                         aplicacionesactuales = lista_ordenadores[i].getAplicaciones;
                         Console.Write("\n\t¿Desea Modificar su Identificador? (S/N): ");
                         opcionid = Console.ReadLine();
-                        if (opcionid == "S" || opcionid == "s")
+                        opcionid.ToLower();
+                        while (opcionid != "s" && opcionid != "n")
+                        {
+                            Console.Write("\n\t¿Desea Modificar su Identificador? (S/N): ");
+                            opcionid = Console.ReadLine();
+                            opcionid.ToLower();
+                        }
+                        if (opcionid == "s")
                         {
                             Console.Write("\n\tNuevo Identificador: ");
                             nuevoid = Console.ReadLine();
@@ -653,7 +805,14 @@ namespace Problema1
                 }
                 Console.Write("\n\t¿Más ordenadores (S/N)?: ");
                 opcion = Console.ReadLine();
-            } while (opcion == "S" || opcion == "s");
+                opcion.ToLower();
+                while (opcion != "s" && opcion != "n")
+                {
+                    Console.Write("\n\t¿Más ordenadores (S/N)?: ");
+                    opcion = Console.ReadLine();
+                    opcion.ToLower();
+                }
+            } while (opcion == "s");
         }
 
 
@@ -690,17 +849,117 @@ namespace Problema1
                 }
             } while (opcion != "1" || opcion != "2" || opcion != "3");
         }
+
         static void BuscarPorProcesador()
         {
-            o.BuscarPorProcesador();
+            string opcion;
+            do
+            {
+                Console.Clear();
+                string procesadorbusqueda;
+                Console.WriteLine("\n\t\t=== Busqueda de Ordenador por Procesador ===\n");
+                Console.Write("\tIntroduce el nombre exacto del procesador buscado: ");
+                procesadorbusqueda = Console.ReadLine();
+
+                int npcs = 0;
+                Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.id).ToArray();
+
+                int cuentalista = lista_ordenadores.Count;
+                Console.WriteLine("\n\tId.\t\tAula \t\tProcesador");
+                Console.WriteLine("\n\t== \t\t====== \t\t========");
+                for (int i = 0; i < lista_ordenadores.Count; i++)
+                {
+                    if (lista_ordenadores[i].procesador.ToLower().Contains(procesadorbusqueda.ToLower()))
+                    {
+                        npcs++;
+                        Console.Write("\n\t{0}\t\t{1}\t\t{2}\n", lista_ordenadores[i].id, lista_ordenadores[i].NombreAula, lista_ordenadores[i].procesador);
+                    }
+                    else if (lista_ordenadores[cuentalista-1].procesador.ToLower().Contains(procesadorbusqueda.ToLower()) == false && npcs == 0)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("\n\t\tNo existe resultados relacionados con el procesador {0}.", procesadorbusqueda);
+                    }
+                }
+
+                Console.WriteLine("\n\t==========================================");
+                Console.WriteLine("\n\tNº Ordenadores: {0}", npcs);
+                Console.Write("\n\t¿Desea realizar otra busqueda (S/N)?: ");
+                opcion = Console.ReadLine();
+            } while (opcion == "S" || opcion == "s");
         }
+
         static void BuscarPorAPP()
         {
-            o.BuscarPorAPPS();
+            string opcion;
+            do
+            {
+                Console.Clear();
+                string aplicacionbusqueda;
+                Console.WriteLine("\n\t\t=== Busqueda de Ordenador por APP ===\n");
+                Console.Write("\tIntroduce el nombre exacto de la aplicacion buscada: ");
+                aplicacionbusqueda = Console.ReadLine();
+                int npcs = 0;
+                Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.id).ToArray();
+
+                int cuentalista = lista_ordenadores.Count;
+                Console.WriteLine("\n\tId.\t\tAula \t\tAplicaciones");
+                Console.WriteLine("\n\t== \t\t====== \t\t========");
+                for (int i = 0; i < lista_ordenadores.Count; i++)
+                {
+                    if (lista_ordenadores[i].aplicaciones.ToLower().Contains(aplicacionbusqueda.ToLower()))
+                    {
+                        npcs++;
+                        Console.Write("\n\t{0}\t\t{1}\t\t{2}\n", lista_ordenadores[i].id, lista_ordenadores[i].NombreAula, lista_ordenadores[i].aplicaciones);
+                    }
+                    else if (lista_ordenadores[cuentalista - 1].aplicaciones.ToLower().Contains(aplicacionbusqueda.ToLower()) == false && npcs == 0)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("\n\t\tNo existe resultados relacionados con la aplicación {0}.", aplicacionbusqueda);
+                    }
+                }
+
+                Console.WriteLine("\n\t==========================================");
+                Console.WriteLine("\n\tNº Ordenadores: {0}", npcs);
+                Console.Write("\n\t¿Desea realizar otra busqueda (S/N)?: ");
+                opcion = Console.ReadLine();
+            } while (opcion == "S" || opcion == "s");
         }
+
         static void BuscarPorTvideo()
         {
-            o.BuscarPorTVideo();
+            string opcion;
+            do
+            {
+                Console.Clear();
+                string tvideobuscada;
+                Console.WriteLine("\n\t\t=== Busqueda de Ordenador por Tarjeta de Video ===\n");
+                Console.Write("\tIntroduce el nombre exacto de la Tarjeta de Video buscada: ");
+                tvideobuscada = Console.ReadLine();
+                int npcs = 0;
+                Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.id).ToArray();
+
+                int cuentalista = lista_ordenadores.Count;
+                Console.WriteLine("\n\tId.\t\tAula \t\tTarjeta De Video");
+                Console.WriteLine("\n\t== \t\t====== \t\t========");
+                for (int i = 0; i < lista_ordenadores.Count; i++)
+                {
+                    if (lista_ordenadores[i].tvideo.ToLower().Contains(tvideobuscada.ToLower()))
+                    {
+                        npcs++;
+                        Console.Write("\n\t{0}\t\t{1}\t\t{2}\n", lista_ordenadores[i].id, lista_ordenadores[i].NombreAula, lista_ordenadores[i].tvideo);
+                    }
+                    else if (lista_ordenadores[cuentalista - 1].tvideo.ToLower().Contains(tvideobuscada.ToLower()) == false && npcs == 0)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("\n\t\tNo existe resultados relacionados con la tarjeta de video {0}.", tvideobuscada);
+                    }
+                }
+
+                Console.WriteLine("\n\t==========================================");
+                Console.WriteLine("\n\tNº Ordenadores: {0}", npcs);
+                Console.Write("\n\t¿Desea realizar otra busqueda (S/N)?: ");
+                opcion = Console.ReadLine();
+            } while (opcion == "S" || opcion == "s");
         }
 
 
@@ -764,6 +1023,7 @@ namespace Problema1
             o.CaracteristicasOrdenador();
         }
 
+
         static void MenuConfiguracion()
         {
             string opcion;
@@ -784,6 +1044,7 @@ namespace Problema1
                         break;
 
                     case "2":
+                        CambiarNOrdenadores();
                         break;
 
                     case "9":
@@ -814,7 +1075,7 @@ namespace Problema1
             while (nuevonumeroaulas < naulaspermitidas)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("\n\t✾ Atención: El nuevo número de aulas no puede ser menor al anterior.");
+                Console.Write("\n\t[ATENCION]: El nuevo número de aulas no puede ser menor al anterior.");
                 Console.ResetColor();
 
                 Console.Write("\n\tCambiar N· De Aulas a: ");
@@ -822,6 +1083,33 @@ namespace Problema1
             }
 
             naulaspermitidas = nuevonumeroaulas; 
+        }
+
+        static void CambiarNOrdenadores()
+        {
+            int nuevonumeroordenadores;
+
+            Console.Clear();
+            Console.WriteLine("\t\t === CAMBIAR NÚMERO MAXIMO DE PC´S POR AULA ===\n");
+            Console.WriteLine("\tN· Actual de PC´s por Aula permitidos: {0}", nordenadorespermitidosaula);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("\n\t[ATENCION]: El nuevo número de aulas permitidas no puede ser menor al anterior.\n");
+            Console.ResetColor();
+
+            Console.Write("\n\tCambiar N· De PC´s permitidos por Aula a: ");
+            nuevonumeroordenadores = int.Parse(Console.ReadLine());
+
+            while (nuevonumeroordenadores < nordenadorespermitidosaula)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("\n\t[ATENCION]: El nuevo número de PC´s permitidos por Aula no puede ser menor al anterior.");
+                Console.ResetColor();
+
+                Console.Write("\n\tCambiar N· De PC´s permitidos por Aula a: ");
+                nuevonumeroordenadores = int.Parse(Console.ReadLine());
+            }
+
+            nordenadorespermitidosaula = nuevonumeroordenadores;
         }
 
         static void InicializacionPruebas()
@@ -897,6 +1185,7 @@ namespace Problema1
             Console.WriteLine("\t\t PULSE INTRO PARA VOLVER ATRÁS \n");
             Console.ReadLine();
         }
+
 
         static Aula obteneraula (int id)
         {

@@ -8,10 +8,10 @@ namespace Problema1
 {
     class Ordenador
     {
-        int ida;
-        string id, ram, discoduro, procesador, tvideo, aplicaciones;
-        string fecha = DateTime.Now.ToString();
-        Aula aula;
+        public int ida;
+        public string id, ram, discoduro, procesador, tvideo, aplicaciones;
+        public string fecha = DateTime.Now.ToString();
+        public Aula aula;
 
         public void LeerDatos(string id, Aula aula, string ram, string discoduro, string procesador, string tvideo, string aplicaciones, string fecha)
         {
@@ -25,28 +25,28 @@ namespace Problema1
             this.fecha = fecha;
         }
 
-        public void VerDatos()
-        {
-            Console.Clear();
-            if (Program.lista_ordenadores.Count == 0)
-            {
-                Console.WriteLine("\n\n\t\t\t ¡NO HAY ORDENADORES REGISTRADOS! ");
-                Console.WriteLine("\n\n\t\t\t PULSA INTRO PARA VOLVER ATRÁS ");
-                Console.ReadLine();
-            }
-            else
-            {
-                Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.id).ToArray();
-                Console.WriteLine("\t\t=== LISTADO DE ORDENADORES ===\n");
-                Console.WriteLine("\tId.\tNombre\t\tFecha Modificacion\n");
-                Console.WriteLine("\t== \t====== \t\t==================");
-                foreach (var c in sorted)
-                {
-                        Console.Write("\n\t{0}\t{1}\t\t{2}\n", c.id, c.NombreAula , c.fecha);
-                }
-                Console.ReadLine();
-            }
-        }
+        //public void VerDatos()
+        //{
+        //    Console.Clear();
+        //    if (Program.lista_ordenadores.Count == 0 || Program.lista_aulas.Count == 0)
+        //    {
+        //        Console.WriteLine("\n\n\t\t\t ¡NO HAY ORDENADORES O AULAS REGISTRADAS! ");
+        //        Console.WriteLine("\n\n\t\t\t PULSA INTRO PARA VOLVER ATRÁS ");
+        //        Console.ReadLine();
+        //    }
+        //    else
+        //    {
+        //        Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.id).ToArray();
+        //        Console.WriteLine("\t\t=== LISTADO DE ORDENADORES ===\n");
+        //        Console.WriteLine("\tId.\tNombre\t\tFecha Modificacion\n");
+        //        Console.WriteLine("\t== \t====== \t\t==================");
+        //        foreach (var c in sorted)
+        //        {
+        //                Console.Write("\n\t{0}\t{1}\t\t{2}\n", c.id, c.NombreAula , c.fecha);
+        //        }
+        //        Console.ReadLine();
+        //    }
+        //}
 
 
         public string getId
@@ -229,43 +229,43 @@ namespace Problema1
             Console.ReadLine();
         }
 
-        public void BuscarPorProcesador()
-        {
-            string opcion;
-            do
-            {
-                Console.Clear();
-                string procesadorbusqueda;
-                Console.WriteLine("\n\t\t=== Busqueda de Ordenador por Procesador ===\n");
-                Console.Write("\tIntroduce el nombre exacto del procesador buscado: ");
-                procesadorbusqueda = Console.ReadLine();
+        //public void BuscarPorProcesador()
+        //{
+        //    string opcion;
+        //    do
+        //    {
+        //        Console.Clear();
+        //        string procesadorbusqueda;
+        //        Console.WriteLine("\n\t\t=== Busqueda de Ordenador por Procesador ===\n");
+        //        Console.Write("\tIntroduce el nombre exacto del procesador buscado: ");
+        //        procesadorbusqueda = Console.ReadLine();
 
-                int npcs = 0;
-                Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.id).ToArray();
+        //        int npcs = 0;
+        //        Ordenador[] sorted = Program.lista_ordenadores.OrderBy(Ordenador => Ordenador.id).ToArray();
 
-                Console.WriteLine("\n\tId.\t\tAula \t\tProcesador");
-                Console.WriteLine("\n\t== \t\t====== \t\t========");
-                foreach (var c in sorted)
-                {
-                    if (c.procesador.ToLower() == procesadorbusqueda.ToLower())
-                    {
-                        npcs++;
-                        Console.Write("\n\t{0}\t\t{1}\t\t{2}\n", c.id, c.NombreAula, c.procesador);
-                    }
-                    else if (npcs == 0)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("\n\t\tNo existe resultados relacionados con el procesador {0}.", procesadorbusqueda);
-                        break;
-                    }
-                }
+        //        Console.WriteLine("\n\tId.\t\tAula \t\tProcesador");
+        //        Console.WriteLine("\n\t== \t\t====== \t\t========");
+        //        foreach (var c in sorted)
+        //        {
+        //            if (c.procesador.ToLower().Contains(procesadorbusqueda.ToLower()))
+        //            {
+        //                npcs++;
+        //                Console.Write("\n\t{0}\t\t{1}\t\t{2}\n", c.id, c.NombreAula, c.procesador);
+        //            }
+        //            else if (npcs == 0)
+        //            {
+        //                Console.Clear();
+        //                Console.WriteLine("\n\t\tNo existe resultados relacionados con el procesador {0}.", procesadorbusqueda);
+        //                break;
+        //            }
+        //        }
 
-                Console.WriteLine("\n\t==========================================");
-                Console.WriteLine("\n\tNº Ordenadores: {0}", npcs);
-                Console.Write("\n\t¿Desea realizar otra busqueda (S/N)?: ");
-                opcion = Console.ReadLine();
-            } while (opcion == "S" || opcion == "s");
-        }
+        //        Console.WriteLine("\n\t==========================================");
+        //        Console.WriteLine("\n\tNº Ordenadores: {0}", npcs);
+        //        Console.Write("\n\t¿Desea realizar otra busqueda (S/N)?: ");
+        //        opcion = Console.ReadLine();
+        //    } while (opcion == "S" || opcion == "s");
+        //}
 
         public void BuscarPorAPPS()
         {
@@ -323,7 +323,7 @@ namespace Problema1
                 Console.WriteLine("\n\t== \t\t====== \t\t========");
                 foreach (var c in sorted)
                 {
-                    if (c.tvideo.ToLower() == tvideobuscada.ToLower())
+                    if (c.tvideo.ToLower().Contains(tvideobuscada.ToLower()))
                     {
                         npcs++;
                         Console.Write("\n\t{0}\t\t{1}\t\t{2}\n", c.id, c.NombreAula, c.tvideo);
